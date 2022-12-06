@@ -24,11 +24,11 @@ const ToDoList = () => {
   }, []);
 
   return (
-    <ul className="text-left font-bold text-xl">
+    <ul className="text-left font-bold text-xl bg-gray-800 rounded-lg p-4">
       {toDos.map((toDo) => (
         <li key={toDo.id} className="border-b p-4">
           <input type="checkbox" checked={toDo.completed} />
-          <span className="ml-2">{toDo.text}</span>
+          <span className="ml-2 text-white">{toDo.text}</span>
         </li>
       ))}
     </ul>
