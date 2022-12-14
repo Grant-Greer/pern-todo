@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/Grant-Greer/pern-todo/issues"
   },
-  "homepage": "https://github.com/Grant-Greer/pern-todo#readme"
+  "homepage": "https://github.com/Grant-Greer/pern-todo#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "pg": "^8.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.15",
+    "prisma": "^4.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  }
 }
