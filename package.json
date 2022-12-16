@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/Grant-Greer/pern-todo/issues"
   },
-  "homepage": "https://github.com/Grant-Greer/pern-todo#readme"
+  "homepage": "https://github.com/Grant-Greer/pern-todo#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
 }
