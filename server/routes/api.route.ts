@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
@@ -6,23 +6,30 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const router: Router = Router();
 
+interface UserData {
+
+  username: string;
+  password: string;
+  
+}
+
 router.post("/users", async (req: Request, res: Response) => {
   const { username, password } = req.body;
   // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword: string = await bcrypt.hash(password, 10);
   // Create a new user in the database
-  const user = await prisma.user.create({ data: { username, password } });
+  const user = await prisma.user.create({ data: { username, password } as UserData});
   // Generate a JSON web token (JWT)
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+  const token: string = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
   // Return the JWT to the client
   res.json({ token });
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: Request, res: Response) => {
   // Get the username and password from the request body
   const { username, password } = req.body;
   // Query the database for a user with the specified username
-  const user = await prisma.user.findOne({ where: { username } });
+  const user = await prisma.user.findUnique({ where: { username } });
   // If no user was found, return an error
   if (!user) {
     return res.status(401).json({ error: "Invalid username or password" });
@@ -39,7 +46,7 @@ router.post("/login", async (req, res) => {
   res.json({ token });
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", (req: Request, res: Response) => {
   // Clear the user's session
   req.session.destroy((err) => {
     if (err) {
@@ -49,7 +56,7 @@ router.post("/logout", (req, res) => {
   });
 });
 
-router.get("/users/:id/todos", async (req, res) => {
+router.get("/users/:id/todos", async (req: Request, res: Response) => {
   try {
     // Verify the JWT in the Authorization header
     const token = req.headers.authorization.split(" ")[1];
@@ -72,7 +79,7 @@ router.get("/users/:id/todos", async (req, res) => {
   }
 });
 
-router.post("/users/:id/todos", async (req, res) => {
+router.post("/users/:id/todos", async (req: Request, res: Response) => {
   try {
     // Verify the JWT in the Authorization header
     const token = req.headers.authorization.split(" ")[1];
@@ -96,7 +103,7 @@ router.post("/users/:id/todos", async (req, res) => {
   }
 });
 
-router.put("/todos/:id", async (req, res) => {
+router.put("/todos/:id", async (req: Request, res: Response) => {
   try {
     // Verify the JWT in the Authorization header
     const token = req.headers.authorization.split(" ")[1];
@@ -122,7 +129,7 @@ router.put("/todos/:id", async (req, res) => {
   }
 });
 
-router.delete("/todos/:id", async (req, res) => {
+router.delete("/todos/:id", async (req: Request, res: Response) => {
   try {
     // Verify the JWT in the Authorization header
     const token = req.headers.authorization.split(" ")[1];
@@ -144,6 +151,4 @@ router.delete("/todos/:id", async (req, res) => {
   }
 });
 
-router.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+export default router;
