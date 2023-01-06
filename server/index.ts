@@ -1,17 +1,30 @@
+import express from "express";
+import dotenv from "dotenv";
+import router from "./routes/auth.route";
+import morgan from "morgan";
+import session from "express-session";
+import verifyJwt from "./middleware/verifyjwt";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+dotenv.config();
 
-async function main() {
-  // ... you will write your Prisma Client queries here
-}
+export const prisma = new PrismaClient();
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
+const app = express();
+
+app.use(
+  session({
+    secret: "my-secret",
+    resave: false,
+    saveUninitialized: true,
   })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+);
+
+app.use(express.json());
+app.use(morgan("dev"));
+app.use(verifyJwt);
+app.use("/api", router);
+
+app.listen(3000, () => {
+  console.log("Server listening on port 3000");
+});
