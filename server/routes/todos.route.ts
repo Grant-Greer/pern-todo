@@ -3,29 +3,25 @@ import dotenv from "dotenv";
 import verifyJwt from "../middleware/verifyjwt";
 
 // Import the Prisma client instance
-import { prisma } from "../index";
+import { prisma } from "../app";
 
 dotenv.config();
 
 const todosRouter: Router = Router();
-
-const secret: string = process.env.JWT_SECRET!;
-
-interface JwtPayload {
-  id: string;
-  username: string;
-}
 
 todosRouter.get(
   "/users/:id/todos",
   verifyJwt,
   async (req: Request, res: Response) => {
     try {
+      if (req.params["id"] && req.params["id"] == userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       // If the JWT is valid and the user is authorized, retrieve the todos from the database
       const todos = await prisma.todo.findMany({
-        where: { userId: parseInt(req.params.id) },
+        where: { userId: parseInt(req.params["id"]) },
       });
-      res.json(todos);
+      return res.json(todos);
     } catch (error) {
       // If the JWT is invalid or has expired, return an error
       return res.status(401).json({ error: "Unauthorized" });
@@ -43,7 +39,7 @@ todosRouter.post(
       const newTodo = await prisma.todo.create({
         data: { title, user: { connect: { id: parseInt(req.params.id) } } },
       });
-      res.json(newTodo);
+      return res.json(newTodo);
     } catch (error) {
       // If the JWT is invalid or has expired, return an error
       return res.status(401).json({ error: "Unauthorized" });
@@ -63,7 +59,7 @@ todosRouter.put(
         where: { id: parseInt(id) },
         data: { title, completed },
       });
-      res.json(updatedTodo);
+      return res.json(updatedTodo);
     } catch (error) {
       // If the JWT is invalid or has expired, return an error
       return res.status(401).json({ error: "Unauthorized" });
@@ -81,7 +77,7 @@ todosRouter.delete(
       const deletedTodo = await prisma.todo.delete({
         where: { id: parseInt(id) },
       });
-      res.json(deletedTodo);
+      return res.json(deletedTodo);
     } catch (error) {
       // If the JWT is invalid or has expired, return an error
       return res.status(401).json({ error: "Unauthorized" });
