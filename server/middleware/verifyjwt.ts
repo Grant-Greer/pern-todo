@@ -1,6 +1,6 @@
 // middleware.ts
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -29,14 +29,14 @@ function verifyJwt(req: Request, res: Response, next: NextFunction) {
     }
 
     // Verify the JWT in the Authorization header
-    const payload = jwt.verify(token, secret);
+    const payload: string | JwtPayload = jwt.verify(token, secret);
 
-    if (!payload || typeof payload["id"] !== "string") {
+    if (!payload) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     // Check if the user's ID in the payload matches the ID in the request parameters
-    const userId = payload["id"];
+    const userId = payload;
     if (userId !== req.params["id"]) {
       return res.status(401).json({ error: "Unauthorized" });
     }
