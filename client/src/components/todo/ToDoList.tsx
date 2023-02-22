@@ -16,7 +16,7 @@ const ToDoList = () => {
         const response = await axios.get("/api/todos");
         setToDos(response.data);
       } catch (error) {
-        // Handle error
+        console.log(error);
       }
     };
 
