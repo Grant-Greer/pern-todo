@@ -2,9 +2,11 @@
   "name": "pern-todo",
   "version": "1.0.0",
   "description": "PERN stack To-Do App.",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "if-env TYPE=server && (cd server && npm run build) || (cd client && npm run build)",
+    "server": "node ./server/app.js",
+    "client": "cd client && npm start"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,7 @@
     "url": "https://github.com/Grant-Greer/pern-todo/issues"
   },
   "homepage": "https://github.com/Grant-Greer/pern-todo#readme",
-  "devDependencies": {}
+  "dependencies": {
+    "if-env": "^1.0.4"
+  }
 }
