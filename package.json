@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Grant-Greer/pern-todo#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "if-env": "^1.0.4"
   }
 }

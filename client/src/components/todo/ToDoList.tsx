@@ -13,18 +13,20 @@ const ToDoList = () => {
   useEffect(() => {
     const fetchToDos = async () => {
       try {
-        const response = await axios.get("/api/todos");
+        const response = await axios.get<ToDo[]>("/api/todos");
         setToDos(response.data);
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchToDos();
-  }, []);
+    fetchToDos().catch((error) => {
+      console.log(error);
+    });
+  }, [toDos]);
 
   return (
-    <ul className="text-left font-bold text-xl bg-gray-800 rounded-lg p-4">
+    <ul className="absolute top-60 text-left font-bold text-xl bg-gray-800 rounded-lg p-4">
       {toDos.map((toDo) => (
         <li key={toDo.id} className="border-b p-4">
           <input type="checkbox" checked={toDo.completed} />
